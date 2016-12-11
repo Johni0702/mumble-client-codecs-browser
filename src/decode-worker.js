@@ -3,18 +3,15 @@ import { Decoder as OpusDecoder } from 'libopus.js'
 const MUMBLE_SAMPLE_RATE = 48000
 
 export default function (self) {
-  var id = 0
   var opusDecoder
   self.addEventListener('message', e => {
     const data = e.data
-    console.log('worker', data)
     if (data.action === 'reset') {
       if (opusDecoder) {
         opusDecoder.destroy()
         opusDecoder = null
       }
       self.postMessage({
-        id: id++,
         action: 'reset'
       })
     } else if (data.action === 'decodeOpus') {
@@ -28,7 +25,6 @@ export default function (self) {
       const input = data.buffer ? Buffer.from(data.buffer) : null
       const decoded = opusDecoder.decodeFloat32(input)
       self.postMessage({
-        id: id++,
         action: 'decoded',
         buffer: decoded.buffer,
         target: data.target,

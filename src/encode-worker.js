@@ -17,6 +17,7 @@ export default function (self) {
         celt7Encoder.destroy()
         celt7Encoder = null
       }
+      self.postMessage({reset: true})
     } else if (data.action === 'encodeOpus') {
       if (!opusEncoder) {
         opusEncoder = new OpusEncoder({

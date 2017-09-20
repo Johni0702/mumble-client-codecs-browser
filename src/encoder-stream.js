@@ -28,12 +28,17 @@ class EncoderStream extends Transform {
   }
 
   _onMessage (data) {
-    this.push({
-      target: data.target,
-      codec: this._codec,
-      frame: Buffer.from(data.buffer, data.byteOffset, data.byteLength),
-      position: data.position
-    })
+    if (data.reset) {
+      pool.recycle(this._worker)
+      this._finalCallback()
+    } else {
+      this.push({
+        target: data.target,
+        codec: this._codec,
+        frame: Buffer.from(data.buffer, data.byteOffset, data.byteLength),
+        position: data.position
+      })
+    }
   }
 
   _transform (chunk, encoding, callback) {
@@ -48,14 +53,9 @@ class EncoderStream extends Transform {
     callback()
   }
 
-  _flush (callback) {
-    this._cleanup()
-    callback()
-  }
-
-  _cleanup () {
+  _final (callback) {
     this._worker.postMessage({ action: 'reset' })
-    pool.recycle(this._worker)
+    this._finalCallback = callback
   }
 }
 

@@ -35,7 +35,7 @@ class DecoderStream extends Transform {
         position: data.position
       })
     } else if (data.action === 'reset') {
-      this._flushCallback()
+      this._finalCallback()
     } else {
       throw new Error('unexpected message:' + data)
     }
@@ -61,9 +61,9 @@ class DecoderStream extends Transform {
     callback()
   }
 
-  _flush (callback) {
+  _final (callback) {
     this._worker.postMessage({ id: this._id++, action: 'reset' })
-    this._flushCallback = () => {
+    this._finalCallback = () => {
       pool.recycle(this._worker)
       this._worker = null
       callback()

@@ -48,6 +48,7 @@ class EncoderStream extends Transform {
       target: chunk.target,
       buffer: buffer,
       numberOfChannels: chunk.numberOfChannels,
+      bitrate: chunk.bitrate,
       position: chunk.position
     }, [buffer])
     callback()

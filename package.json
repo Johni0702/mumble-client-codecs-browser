@@ -1,6 +1,6 @@
 {
   "name": "mumble-client-codecs-browser",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Mumble protocol client library - pure js codecs",
   "main": "index.js",
   "scripts": {
